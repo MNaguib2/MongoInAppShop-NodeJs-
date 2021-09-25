@@ -7,14 +7,14 @@
    <%- include('../layouts/navigation.ejs') %>
 
     <main>
-        <form class="product-form" action="<% if (editing) { %> /admin/edite-product/<%= product.id %> <% } else { %> /admin/add-product <% } %>" method="POST">
+        <form class="product-form" action="<% if (editing) { %> /admin/edite-product/<%= product._id %> <% } else { %> /admin/add-product <% } %>" method="POST">
             <div class="form-control">
                 <label for="title">Title</label>
                 <input type="text" name="title" id="title" <%if (editing) {%>value="<%= product.title %>" <% } %> required>
             </div>
             <div class="form-control">
                 <label for="title">Image Url</label>
-                <input type="text" name="imageurl" id="imageurl" <%if (editing) {%> value="<%= product.ImageURL %>" <% } %>"  required>
+                <input type="text" name="imageurl" id="imageurl" <%if (editing) {%> value="<%= product.imageUrl %>" <% } %>"  required>
             </div>
             <div class="form-control">
                 <label for="title">Price</label>
