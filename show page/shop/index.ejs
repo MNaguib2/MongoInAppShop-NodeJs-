@@ -14,11 +14,14 @@
                             <h1 class="product__title"><%= product.title %></h1>
                         </header>
                         <div class="card__image">
-                            <img src="<%= product.imageUrl %>" alt="<%= product.ImageURL %>">
+                            <img src="<%= product.imageUrl %>" alt="<%= product.imageUrl %>">
                         </div>
                         <div class="card__content">
                             <h2 class="product__price"><%= product.price %></h2>
-                            <p class="product__description"><%= product.description %></p>
+                            <p class="product__description" id="<%= product._id %>" value = "<%= product.description %>" style="display: inline;">
+                                <%= product.description %>
+                            </p>
+                            <a class="stretched-link text-danger" style="position: relative; cursor: pointer;" id="M<%= product._id %>" onclick="toggleContent('<%= product._id%>')" i18n>...Read More</a>
                         </div>
                         <div class="card__actions">
                             <form action="/card" method="POST">
@@ -33,5 +36,6 @@
             <h1>No Products Found!</h1>
         <% } %>
     </main>
+    <script src="/JS/readMoreLess.js"></script>
 </body>
 </html>

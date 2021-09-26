@@ -49,6 +49,7 @@ form:invalid>.btn {
   
   .card__image img {
     width: 100%;
+    max-height: 30vh;
   }
   
   .card__actions {
@@ -75,3 +76,11 @@ form:invalid>.btn {
     background-color: #00695c;
     color: white;
   }
+  .text-danger {
+    color: #dc3545;
+  }
+  
+.stretched-link:hover {
+  color: blue;
+  text-decoration: underline;
+}
