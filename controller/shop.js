@@ -1,4 +1,5 @@
 const Product = require('../models/product');
+const User = require('../models/User');
 
 exports.getIndex = (req, res, next) => {
     Product.fetchAll()
@@ -36,19 +37,6 @@ exports.getDetials = (req, res, next) => {
         .catch(err => {
             console.log(err);
         });
-    /*
-    Product.findByPk(req.params.productid)
-    .then(result => {
-        res.render('shop/product-detials', {
-            product: result,
-            pageTitle: 'Your Order',
-            path: req.url            
-        })
-    })
-    .catch(err => {
-        console.log(err);
-//     });
-//     //*/
 }
 // exports.getCard = (req, res, next) => {
 //     console.log('this is new way ', req.user);
@@ -66,37 +54,18 @@ exports.getDetials = (req, res, next) => {
 //         })
 //         .catch(err => console.log(err));
 // }
-// exports.postcardid = (req, res, next) => {
-//     const prodId = req.body.productId;
-//     let fetchedCard;
-//     let newQuantity = 1;
-//     req.user.getCard()
-//         .then(card => {
-//             fetchedCard = card;
-//             return card.getProducts({ where: { id: prodId } })
-//         })
-//         .then(products => {
-//             let product;
-//             if (products.length > 0) {
-//                 product = products[0];
-//             }
-//             if (product) {
-//                 const oldQuantity = product.carditem.quantity;
-//                 newQuantity = oldQuantity + 1;
-//             }
-//             return Product.findByPk(prodId)
-//         })
-//         .then(product => {
-//             return fetchedCard.addProduct(product, {
-//                 through: { quantity: newQuantity }
-//             });
-//         })
-
-//         .then(result => {
-//             res.redirect('/card');
-//         })
-//         .catch(err => console.log(err));
-// }
+exports.postcardid = (req, res, next) => {
+    const prodId = req.body.productId;
+    Product.findById(prodId)
+    .then(result => {
+        return req.user.addToCart(result);
+    })
+    .then(result => {
+        //console.log(result);
+        res.redirect('/cart');
+      })
+    .catch(err => console.log(err));
+}
 // exports.postCardDeleteProduct = (req, res, next) => {
 //     const productid = req.body.productId;
 //     req.user.getCard()

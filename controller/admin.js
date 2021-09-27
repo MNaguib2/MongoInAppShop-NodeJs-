@@ -25,28 +25,28 @@ Product.fetchAll()
     console.log(err);
   });
 }
-/*
+
 exports.postdeleteproduct = (req, res, next) => {
   const productid = req.params.productid;
   if (productid) {
-    Product.findByPk(productid)
+    Product.findById(productid)
     .then(result => {
-      return result.destroy();
+     return Product.Delete(productid);
     })
     .then(result =>  {
-      console.log('DELETED PRODUCT IS DONE!!');
+      console.log((result.acknowledged ? 'DELETED PRODUCT IS DONE!!' : 'Accoured Error !') + ' (this in AdminController Func Post Delete)');
       res.redirect('/');
     })
     .catch(err => {
       console.log(err);
+      res.redirect('/');
     });
-    //Product.delete(productid); // this when use old code work with file.json
   }
 }
-//*/
+
 exports.postAddProduct = (req, res) => {
   const addproduct = new Product
-  (req.body.price, req.body.title, req.body.description, req.body.imageurl)
+  (req.body.price, req.body.title, req.body.description, req.body.imageurl, req.user._id)
   addproduct.save()
   .then(result => {
     console.log((result.acknowledged ? 'Added Successful !' : 'Accoured Error !') + ' (this in AdminController Func Post add)');
