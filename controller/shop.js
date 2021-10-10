@@ -1,8 +1,8 @@
 const Product = require('../models/product');
-const User = require('../models/User');
+const Order = require('../models/order');
 
 exports.getIndex = (req, res, next) => {
-    Product.fetchAll()
+    Product.find()
     .then(result => {
         res.render('shop/index', {
             prods: result,
@@ -11,22 +11,9 @@ exports.getIndex = (req, res, next) => {
         })
     })
 }
-
-exports.getProducts = (req, res, next) => {
-    Product.fetchAll()
-        .then(result => {
-            res.render('shop/product-list', {
-                prods: result,
-                pageTitle: 'All Products',
-                path: req.url
-            })
-        })
-        .catch(err => {
-            console.log(err)
-        });
-}
 exports.getDetials = (req, res, next) => {
-    Product.findById(req.params.productid)
+    //Product.findById(req.params.productid)//this is two way to find elements
+    Product.findOne({_id : req.params.productid})
         .then(result => {
             res.render('shop/product-detials', {
                 product: result,
@@ -38,22 +25,21 @@ exports.getDetials = (req, res, next) => {
             console.log(err);
         });
 }
-// exports.getCard = (req, res, next) => {
-//     console.log('this is new way ', req.user);
-//     req.user.getCard()
-//         .then(card => {
-//             return card.getProducts()
-//                 .then(product => {
-//                     res.render('shop/card', {
-//                         pageTitle: 'Your Cart',
-//                         path: req.url,
-//                         products: product
-//                     });
-//                 })
-//                 .catch(err => console.log(err));
-//         })
-//         .catch(err => console.log(err));
-// }
+
+exports.getProducts = (req, res, next) => {
+    Product.find()
+        .then(result => {
+            res.render('shop/product-list', {
+                prods: result,
+                pageTitle: 'All Products',
+                path: req.url
+            })
+        })
+        .catch(err => {
+            console.log(err)
+        });
+}
+
 exports.postcardid = (req, res, next) => {
     const prodId = req.body.productId;
     Product.findById(prodId)
@@ -62,53 +48,86 @@ exports.postcardid = (req, res, next) => {
     })
     .then(result => {
         //console.log(result);
-        res.redirect('/cart');
+        res.redirect('/card');
       })
     .catch(err => console.log(err));
 }
-// exports.postCardDeleteProduct = (req, res, next) => {
-//     const productid = req.body.productId;
-//     req.user.getCard()
-//         .then(card => {
-//             return card.getProduct({ where: { id: productid } });
-//         })
-//         .then(result => {
-//             const product = result[0];
-//             return product.carditem.destroy();
-//         })
-//         .catch(err => console.log(err));
-// }
+/*this is way to getCard by mongoose and exsit another way follow to learn
+exports.getCard = (req, res, next) => {
+    req.user.getCart()
+            .then(card => {
+                console.log(card);
+                    res.render('shop/card', {
+                        pageTitle: 'Your Cart',
+                        path: req.url,
+                        products: card
+                })
+        })
+        .catch(err => console.log(err));
+}
+//in this below will dimonistrating another way to get card*/ 
 
-// exports.postcreateorder = (req, res, next) => {
-//     let fetchedCard;
-//     req.user.getCard()
-//         .then(card => {
-//             fetchedCard = card;
-//             return card.getProducts();
-//         })
-//         .then(product => {
-//             return req.user.createOrder()
-//                 .then(order => {
-//                     order.addProduct(product.map(product => {
-//                         product.orderitem = { quantity: product.carditem.quantity };
-//                         return product;
-//                     }))
-//                 }).catch(err => console.log(err))
-//         }).then(result => {
-//             return fetchedCard.setProducts(null);
-//         }).then(result => {
-//             res.redirect('/order');
-//         })
-//         .catch(err => console.log(err));
-// }
-// exports.getOrder = (req, res, next) => {
-//     req.user.getOrders({ include: ['products'] })
-//         .then(order => {
-//             res.render('shop/orders', {
-//                 path: req.url,
-//                 pageTitle: 'Your Order',
-//                 orders: order
-//             });
-//         })
-//         .catch(err => console.log(err))
-// }
+exports.getCard = (req, res, next) => {
+    //console.log(req.user.cart.items.productId);
+    req.user
+    .populate('cart.items.productId')
+    //.execPopulate()
+            .then(card => {
+                //console.log(card.cart.items);
+                    res.render('shop/card', {
+                        pageTitle: 'Your Cart',
+                        path: req.url,
+                        products: card.cart.items
+                })
+        })
+        .catch(err => console.log(err));
+}
+
+exports.postCardDeleteProduct = (req, res, next) => {
+   const id = req.body.productId;
+   req.user.deleteItemFromCart(id)
+   .then(result => {
+    res.redirect('back');
+    console.log((result ? 'Deleted from Card Successful !' : 'Occoured Error !') + ' (this in shopController Func postCardDeleteProduct)');
+   })
+   .catch(err => console.log(err));
+}
+
+
+exports.postcreateorder = (req, res, next) => {
+  req.user
+    .populate('cart.items.productId')
+    //.execPopulate()
+    .then(user => {
+      const products = user.cart.items.map(i => {
+        return { quantity: i.quantity, product: { ...i.productId._doc } };
+      });
+      const order = new Order({
+        user: {
+          name: req.user.name,
+          userId: req.user
+        },
+        products: products
+      });
+      return order.save();
+    })
+    .then(result => {
+      return req.user.clearCart();
+    })
+    .then(() => {
+      res.redirect('/order');
+    })
+    .catch(err => console.log(err));
+};
+
+exports.getOrder = (req, res, next) => {
+  Order.find({ 'user.userId': req.user._id })
+    .then(orders => {
+      res.render('shop/orders', {
+        path: req.url,
+        pageTitle: 'Your Orders',
+        orders: orders
+      });
+    })
+    .catch(err => console.log(err));
+};

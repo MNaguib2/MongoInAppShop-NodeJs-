@@ -9,7 +9,7 @@
                 <div class="image">
                     <img src="<%= product.imageUrl %>" alt="<%= product.imageUrl %>">
                 </div>
-                <h2><%= product.price %></h2>
+                <h2><%= product.price %> <span>&#36;</span></h2>
                 <p><%= product.description %></p>
                 <form action="/card" method="POST">
                     <button class="btn" type="submit">Add to Card</button>

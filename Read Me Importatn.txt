@@ -18,3 +18,4 @@ npm install --save express ejs body-parser express-handlebars pug
 npm install --save-dev nodemon
 npm install -g typescript
 npm install @types/node --save-dev
+npm install --save mongooes

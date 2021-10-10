@@ -1,91 +1,92 @@
 const Product = require('../models/product');
 
 exports.getAddediteProduct = (req, res, next) => {
-  const title = ((req.baseUrl + req.url) == '/admin/add-product') ? "Add Product" : "Edit Product";
-    res.render('admin/edite or add-product', {
-      pageTitle: title,
-      path: req.baseUrl + req.url,
-      //productCSS: false,
-      editing: false, //(title == 'Add Product') ? false : true,
-      product: null
-      //formsCSS: true
-    });  
-};
-
-exports.getProducts = (req, res, next) => {
-Product.fetchAll()
-  .then(resule => {
-    res.render('admin/products', {
-      prods: resule,
-      pageTitle: 'Admin Products',
-      path: req.baseUrl + req.url,
-    });
-  })
-  .catch(err => {
-    console.log(err);
-  });
-}
-
-exports.postdeleteproduct = (req, res, next) => {
-  const productid = req.params.productid;
-  if (productid) {
-    Product.findById(productid)
-    .then(result => {
-     return Product.Delete(productid);
-    })
-    .then(result =>  {
-      console.log((result.acknowledged ? 'DELETED PRODUCT IS DONE!!' : 'Accoured Error !') + ' (this in AdminController Func Post Delete)');
-      res.redirect('/');
-    })
-    .catch(err => {
-      console.log(err);
-      res.redirect('/');
-    });
-  }
-}
+    const title = ((req.baseUrl + req.url) == '/admin/add-product') ? "Add Product" : "Edit Product";
+      res.render('admin/edite or add-product', {
+        pageTitle: title,
+        path: req.baseUrl + req.url,
+        //productCSS: false,
+        editing: false, //(title == 'Add Product') ? false : true,
+        product: null
+        //formsCSS: true
+      });  
+  };
 
 exports.postAddProduct = (req, res) => {
-  const addproduct = new Product
-  (req.body.price, req.body.title, req.body.description, req.body.imageurl, req.user._id)
-  addproduct.save()
-  .then(result => {
-    console.log((result.acknowledged ? 'Added Successful !' : 'Accoured Error !') + ' (this in AdminController Func Post add)');
-    res.redirect('/')
-  })
-  .catch(err => console.log(err))
-};
-
-exports.getEditProduct = (req, res, next) => {
-  const editMode = req.query.edite;
-  if (!editMode) {
-    return res.redirect('/');
+    const addproduct = new Product
+    ({title : req.body.title, price : req.body.price,description: req.body.description,imageUrl: req.body.imageurl, userId: req.user /*._id*/ //in here not important add ._id app automatically get id 
+    })
+    addproduct.save()
+    .then(result => {
+      console.log((result ? 'Added Successful !' : 'Occoured Error !') + ' (this in AdminController Func Post add)');
+      res.redirect('/')
+    })
+    .catch(err => console.log(err))
+  };
+  
+  exports.getEditProduct = (req, res) => {
+    const title = ((req.baseUrl + req.url) == '/admin/add-product') ? "Add Product" : "Edit Product";
+    Product.findById(req.params.productid)
+    .then(result =>{
+      res.render('admin/edite or add-product', {
+        pageTitle: title,
+        path: req.baseUrl + req.url,
+        editing: true,
+        product: result
+      })
+    })
+    .catch(err => console.log(err));
   }
-  const prodId = req.params.productid;
 
-  Product.findById(prodId)
-  .then(rows => {
-    if (!rows) {
-      return res.redirect('/');
-    }
-    res.render('admin/edite or add-product', {
-      pageTitle: 'Edit Product',
-      path: '/admin/edit-product',
-      editing: editMode,
-      product: rows
-    });
-  })
-  .catch(err => {
-    console.log(err);
-  })
-};
+  exports.postEditeProduct = (req, res) => {
+    Product.findByIdAndUpdate(req.params.productid, 
+      {title: req.body.title, price: req.body.price, 
+        description: req.body.description, imageUrl: req.body.imageurl})
+        .then(result => {
+          console.log((result ? 'Edit Successful !' : 'Occoured Error !') + ' (this in AdminController Func Post Edit)');
+          res.redirect('/');
+        }).catch(err => console.log(err));
 
-exports.postEditeProduct = (req, res) => {
-  const prodId = req.params.productid;
-  const products = new Product (req.body.price, req.body.title, req.body.description, req.body.imageurl);
-  products.Update(prodId)
-  .then(result => {
-    console.log((result.acknowledged ? 'Update Successful !' : 'Accoured Error !') + ' (this in AdminController Func Post edit)');
-  })
-  .catch(err => console.log(err));
-  res.redirect('/');    
-};
+      /* this is another way by new think
+      const prodId = req.body.productId;
+      const updatedTitle = req.body.title;
+      const updatedPrice = req.body.price;
+      const updatedImageUrl = req.body.imageUrl;
+      const updatedDesc = req.body.description;
+
+      Product.findById(prodId)
+        .then(product => {
+          product.title = updatedTitle;
+          product.price = updatedPrice;
+          product.description = updatedDesc;
+          product.imageUrl = updatedImageUrl;
+          return product.save();
+        })
+        .then(result => {
+          console.log('UPDATED PRODUCT!');
+          res.redirect('/admin/products');
+        })
+        .catch(err => console.log(err));
+    //*/
+  }
+
+  exports.getProducts = (req, res) => {
+    Product.find({userId: req.user._id})
+    //.select('title price') //to show just only specfice detials from documention 
+    //.populate('userId', 'name')//to show some data from another collection related to relationship
+    .then(result => {
+      res.render('admin/products' ,{
+        pageTitle: 'Admin Products',
+        path: req.baseUrl + req.url,
+        prods: result
+      })
+    }).catch(err => console.log(err))
+  }
+
+  exports.postdeleteproduct = (req , res) => {
+    Product.findByIdAndDelete(req.params.productid)
+    .then(result => {
+      console.log((result ? 'Deleted Successful !' : 'Occoured Error !') + ' (this in AdminController Func Post Deleted)');
+      res.redirect('/');
+    }).catch(err => console.log(err));
+  }

@@ -5,7 +5,7 @@ let _db;
 
 const MongoConnect = (callback) => {
                                                                                     //here add name database
-    MongoClient.connect(`mongodb+srv://mena:${Data.password}@cluster0.ovkbw.mongodb.net/${Data.name}?retryWrites=true&w=majority`)
+    MongoClient.connect(`mongodb+srv://mena:${Data.password}@cluster0.ovkbw.mongodb.net/${Data.nameDb}?retryWrites=true&w=majority`)
     .then(client => {
         console.log('Connected!')
         callback(client);

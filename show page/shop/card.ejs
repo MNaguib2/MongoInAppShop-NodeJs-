@@ -9,10 +9,11 @@
                     <ul class="cart__item-list">
                     <% products.forEach(product => { %>
                         <li class="cart__item">
-                            <h1><%= product.title %></h1>
-                            <h2>Quantity: <%= product.carditem.quantity %></h2>
+                            <h1><%= product.productId.title %></h1>
+                            <h2>Quantity: <%= product.quantity %></h2>
                             <form action="/card-delete-item" method="POST">
-                                <input type="hidden" value="<%= product.id %>" name="productId">
+                                <!--in there must write <%= product._id %> but we add productId to use mongoose only-->
+                                <input type="hidden" value="<%= product.productId._id %>" name="productId">
                                 <button class="btn" type="submit">Delete</button>
                             </form>
                         </li>

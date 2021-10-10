@@ -1,48 +1,28 @@
-const mongodb = require('mongodb');
-const getDb = require('../util/database').getDb;
+const mongooes = require('mongoose');
+const Schema = mongooes.Schema;
 
-class Product {
-    constructor(price, title, description, imageUrl, userId) {
-      this.title = title;
-      this.price = price;
-      this.description = description;
-      this.imageUrl = imageUrl;
-      this.UserId = userId;
-    }    
-    save() {   
-      const db = getDb(); 
-        return  db.collection('products').insertOne(this);
- }
+const ProductSchema = new Schema({
+    title: {
+        type: String,
+        required: true,
+    },
+    price: {
+        type: Number,
+        required: true
+    },
+    description: {
+        type: String,
+        required: true,
+    },
+    imageUrl: {
+        type: String,
+        required: true,
+    },
+    userId: {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+    }
+});
 
-    static fetchAll(){
-      const db = getDb();
-      return db.collection('products').find().toArray()
-      .then(products => {
-        return products;
-      })
-      .catch(err => console.log(err));
-    }
-    static findById(prodId) {
-      const db = getDb();
-      return db
-        .collection('products')
-        .find({ _id: new mongodb.ObjectId(prodId)})
-        .next()
-        .then(product => {
-          return product;
-        })
-        .catch(err => {
-          console.log(err);
-        });
-    }
-     Update(prodId){
-      const db = getDb(); 
-      return db.collection('products').updateOne({_id : new mongodb.ObjectId(prodId)}, {$set : this});
-    }
-    static Delete(prodId){
-      const db = getDb(); 
-      return db.collection('products').deleteOne({_id : new mongodb.ObjectId(prodId)});
-    }
-}
-
-module.exports = Product;
+module.exports = mongooes.model('Product',ProductSchema );
