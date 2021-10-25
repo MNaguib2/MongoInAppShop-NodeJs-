@@ -14,10 +14,8 @@ const ShopController = require('../controller/shop');
  router.post('/card-delete-item', ShopController.postCardDeleteProduct);
  router.post('/create-order', ShopController.postcreateorder);
  router.get('/order', ShopController.getOrder);
+ router.post('/clear-order', ShopController.clearOrder);
 
-/*
-router.get('/checkout', ShopController.getcheckout);
-*/
   
 router.get('**', (req, res, next)=>{
     res.redirect('/');

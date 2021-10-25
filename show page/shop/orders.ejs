@@ -19,6 +19,11 @@
                         </li>
                         <% }); %>
                 </ul>
+                <%if(isAuthenticated) {%>
+                <form action="/clear-order" method="post">
+                <button type="submit" class="btn">Clear All Order</button>
+                </form>
+                <% } %>
                 <% } else { %>                    
                     <h1>Nothing there!</h1>
                     <% }; %>

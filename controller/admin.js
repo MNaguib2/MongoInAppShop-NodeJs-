@@ -1,15 +1,20 @@
 const Product = require('../models/product');
 
 exports.getAddediteProduct = (req, res, next) => {
+  //if(req.session.isLoggedIn) { //this is commented to use different way to product url link
     const title = ((req.baseUrl + req.url) == '/admin/add-product') ? "Add Product" : "Edit Product";
       res.render('admin/edite or add-product', {
         pageTitle: title,
         path: req.baseUrl + req.url,
         //productCSS: false,
         editing: false, //(title == 'Add Product') ? false : true,
-        product: null
-        //formsCSS: true
+        product: null,
+        //formsCSS: true,
+        isAuthenticated: req.session.isLoggedIn
       });  
+    // } else {
+    //   res.redirect('/');
+    // }
   };
 
 exports.postAddProduct = (req, res) => {
@@ -25,6 +30,7 @@ exports.postAddProduct = (req, res) => {
   };
   
   exports.getEditProduct = (req, res) => {
+    if(req.session.isLoggedIn) {
     const title = ((req.baseUrl + req.url) == '/admin/add-product') ? "Add Product" : "Edit Product";
     Product.findById(req.params.productid)
     .then(result =>{
@@ -32,10 +38,14 @@ exports.postAddProduct = (req, res) => {
         pageTitle: title,
         path: req.baseUrl + req.url,
         editing: true,
-        product: result
+        product: result,
+        isAuthenticated: req.session.isLoggedIn
       })
     })
     .catch(err => console.log(err));
+  } else {
+    res.redirect('/');
+  }
   }
 
   exports.postEditeProduct = (req, res) => {
@@ -71,16 +81,21 @@ exports.postAddProduct = (req, res) => {
   }
 
   exports.getProducts = (req, res) => {
-    Product.find({userId: req.user._id})
+    if(req.session.isLoggedIn) {
+    Product.find({userId: req.session.user._id})
     //.select('title price') //to show just only specfice detials from documention 
     //.populate('userId', 'name')//to show some data from another collection related to relationship
     .then(result => {
       res.render('admin/products' ,{
         pageTitle: 'Admin Products',
         path: req.baseUrl + req.url,
-        prods: result
+        prods: result,
+        isAuthenticated: req.session.isLoggedIn
       })
     }).catch(err => console.log(err))
+  } else {
+    res.redirect('/');
+  }
   }
 
   exports.postdeleteproduct = (req , res) => {

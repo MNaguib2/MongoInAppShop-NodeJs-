@@ -4,12 +4,14 @@ const Order = require('../models/order');
 exports.getIndex = (req, res, next) => {
     Product.find()
     .then(result => {
-        res.render('shop/index', {
+            res.render('shop/index', {
             prods: result,
             pageTitle: 'shop',
-            path: req.url
+            path: req.url,
+            isAuthenticated: req.session.isLoggedIn
         })
     })
+    //console.log(req.session.isLoggedIn)
 }
 exports.getDetials = (req, res, next) => {
     //Product.findById(req.params.productid)//this is two way to find elements
@@ -18,7 +20,8 @@ exports.getDetials = (req, res, next) => {
             res.render('shop/product-detials', {
                 product: result,
                 pageTitle: result.title,
-                path: req.url
+                path: req.url,
+                isAuthenticated: req.session.isLoggedIn
             })
         })
         .catch(err => {
@@ -32,7 +35,8 @@ exports.getProducts = (req, res, next) => {
             res.render('shop/product-list', {
                 prods: result,
                 pageTitle: 'All Products',
-                path: req.url
+                path: req.url,
+                isAuthenticated: req.session.isLoggedIn
             })
         })
         .catch(err => {
@@ -68,7 +72,7 @@ exports.getCard = (req, res, next) => {
 //in this below will dimonistrating another way to get card*/ 
 
 exports.getCard = (req, res, next) => {
-    //console.log(req.user.cart.items.productId);
+  if(req.session.isLoggedIn) {    
     req.user
     .populate('cart.items.productId')
     //.execPopulate()
@@ -77,10 +81,14 @@ exports.getCard = (req, res, next) => {
                     res.render('shop/card', {
                         pageTitle: 'Your Cart',
                         path: req.url,
-                        products: card.cart.items
+                        products: card.cart.items,
+                        isAuthenticated: req.session.isLoggedIn
                 })
         })
         .catch(err => console.log(err));
+      } else {
+        res.redirect('/');
+      }
 }
 
 exports.postCardDeleteProduct = (req, res, next) => {
@@ -121,13 +129,26 @@ exports.postcreateorder = (req, res, next) => {
 };
 
 exports.getOrder = (req, res, next) => {
-  Order.find({ 'user.userId': req.user._id })
+  if(req.session.isLoggedIn) {
+  Order.find({ 'user.userId': req.session.user._id })
     .then(orders => {
       res.render('shop/orders', {
         path: req.url,
         pageTitle: 'Your Orders',
-        orders: orders
+        orders: orders,
+        isAuthenticated: req.session.isLoggedIn
       });
     })
     .catch(err => console.log(err));
+  } else {
+    res.redirect('/');
+  }
 };
+
+exports.clearOrder = (req, res, next) => {
+  Order.deleteMany()
+  .then(result => {
+    console.log((result ? 'Deleted from Order Successful !' : 'Occoured Error !') + ' (this in shopController Func postclearOrder)');
+    res.redirect('/');
+  }).catch(err => console.log(err));
+}

@@ -3,7 +3,7 @@ const schema = Mongoose.Schema;
 const Product = require('./product');
 
 const UserSchema = new schema({
-    name : {
+    password : {
         type: String,
         required: true
     },

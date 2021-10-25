@@ -11,6 +11,7 @@ form:invalid>.btn {
 .product-item {    
     width: 20rem;
     max-width: 25%;
+    min-width: 200px;
 }
 
 .card {
@@ -49,7 +50,7 @@ form:invalid>.btn {
   
   .card__image img {
     width: 100%;
-    max-height: 30vh;
+    height: 13rem;
   }
   
   .card__actions {
@@ -60,22 +61,8 @@ form:invalid>.btn {
   .card__actions button,
   .card__actions a {
       margin: 0 0.25rem;
-  }
-  
-  .btn {
-    font: inherit;
-    border: 1px solid #00695c;
-    color: #00695c;
-    background: white;
-    border-radius: 3px;
-    cursor: pointer;
-  }
-  
-  .btn:hover,
-  .btn:active {
-    background-color: #00695c;
-    color: white;
-  }
+  }  
+
   .text-danger {
     color: #dc3545;
   }
