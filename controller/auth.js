@@ -1,6 +1,5 @@
 const User = require("../models/User");
 const bcrypt = require('bcryptjs');
-const querystring = require('querystring');
 let validPassword ;
 
 exports.getLogin = (req, res, next) => {
@@ -9,7 +8,8 @@ exports.getLogin = (req, res, next) => {
     path: req.url,
     pageTitle: "Login",
     isAuthenticated: false,
-    passwordvalid : validPassword
+    passwordvalid : validPassword,
+    csrfToken : req.csrfToken()
   });
 };
 
@@ -26,7 +26,7 @@ exports.postLogin = (req, res, next) => {
             req.session.isLoggedIn = true;
             req.session.user = user;
             req.user = user;
-            req.session.save((err) => {
+            req.session.save((err) => {  //.save ( ) to wait until finish
         console.log(
           err
             ? "this is  error in PostLogin in AuthController " + err

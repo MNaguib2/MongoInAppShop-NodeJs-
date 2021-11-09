@@ -8,7 +8,7 @@ const AdminController = require('../controller/admin');
 const middleware = require('../middleware/is-auth'); //this is different way to product url link
 
 
-  router.get('/add-product',middleware, AdminController.getAddediteProduct);
+  router.get('/add-product',middleware, AdminController.getAddediteProduct); // this is another way
 
   router.post('/add-product' , AdminController.postAddProduct);
 

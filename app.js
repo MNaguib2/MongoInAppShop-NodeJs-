@@ -11,11 +11,14 @@ const MongoDbURI =
 const mongooes = require('mongoose');
 const session = require('express-session');
 const MongoDBStore = require('connect-mongodb-session')(session);
+const csurf = require('csurf');
 
 const store = new MongoDBStore({
   uri: MongoDbURI,
   collection: 'Registery'
 });
+
+const csurfProduct = csurf();
 
 const adminData = require('./routes/admin');
 const routershop = require('./routes/shop');
@@ -28,6 +31,7 @@ app.set('view engine', 'ejs');
 app.set('views', 'show page');
 
 const path = require('path');
+
 app.use(express.static(path.join(rootDir, 'public'))); // to direcct to folder css
 app.use(session(
   {secret: 'my sedcret', resave: false, saveUninitialized: false, 
@@ -46,6 +50,8 @@ app.use((req, res, next) => {
     .catch(err => console.log(err));
 });
 //*/
+app.use(csurfProduct);
+
 app.use((req, res, next) => {
   if (!req.session.user) {
     return next();

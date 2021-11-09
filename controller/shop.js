@@ -8,7 +8,8 @@ exports.getIndex = (req, res, next) => {
             prods: result,
             pageTitle: 'shop',
             path: req.url,
-            isAuthenticated: req.session.isLoggedIn
+            isAuthenticated: req.session.isLoggedIn,
+            csrfToken : req.csrfToken()
         })
     })
     //console.log(req.session.isLoggedIn)
