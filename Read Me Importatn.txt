@@ -19,3 +19,8 @@ npm install --save-dev nodemon
 npm install -g typescript
 npm install @types/node --save-dev
 npm install --save mongooes
+
+
+
+email Defailt to SingIn : menaafefe11@yahoo.com
+password : 12345678

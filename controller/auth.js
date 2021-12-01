@@ -9,7 +9,7 @@ exports.getLogin = (req, res, next) => {
     pageTitle: "Login",
     isAuthenticated: false,
     passwordvalid : validPassword,
-    csrfToken : req.csrfToken()
+    // csrfToken : req.csrfToken()
   });
 };
 
@@ -49,6 +49,7 @@ exports.postlLogout = (req, res, next) => {
   //res.setHeader('Set-Cookie','loggedIn=true ');//this is way to inherent loggedIn in another pages
   req.session.isLoggedIn = false;
   req.session.destroy(() => {
+    res.clearCookie("connect.sid");
     res.redirect("/");
   });
 };

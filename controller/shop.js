@@ -9,7 +9,7 @@ exports.getIndex = (req, res, next) => {
             pageTitle: 'shop',
             path: req.url,
             isAuthenticated: req.session.isLoggedIn,
-            csrfToken : req.csrfToken()
+            csrfToken : req.csrfToken() // to made this way in all page when render all from backend this way is cumbersome and will demonistrating another way is convenient
         })
     })
     //console.log(req.session.isLoggedIn)

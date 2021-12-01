@@ -60,7 +60,7 @@ UserSchema.methods.addToCart = function(product) {
       .then(products => { 
         //console.log(products);                 
         return products.map((p, index) => {    
-          //console.log({...p._doc});            
+          console.log({...p._doc});            
           return {
             ...p._doc ,
             quantity: this.cart.items.find(i => {

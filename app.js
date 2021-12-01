@@ -11,14 +11,14 @@ const MongoDbURI =
 const mongooes = require('mongoose');
 const session = require('express-session');
 const MongoDBStore = require('connect-mongodb-session')(session);
-const csurf = require('csurf');
+const csurf = require('csurf'); //this is first way to use algoristhm csrf token after install (npm install --save csurf)
 
 const store = new MongoDBStore({
   uri: MongoDbURI,
   collection: 'Registery'
 });
 
-const csurfProduct = csurf();
+const csurfProduct = csurf(); //is second way in use algoristhm csrf token
 
 const adminData = require('./routes/admin');
 const routershop = require('./routes/shop');
@@ -35,7 +35,9 @@ const path = require('path');
 app.use(express.static(path.join(rootDir, 'public'))); // to direcct to folder css
 app.use(session(
   {secret: 'my sedcret', resave: false, saveUninitialized: false, 
-  /*cookie{} you can add any configuration to cookie here*/
+  //*
+  cookie: {maxAge: (3600000 * 3)}, 
+  //you can add any configuration to cookie here*/
   store: store
 }));
 /* i will comment this to use signin and define every user
@@ -50,7 +52,7 @@ app.use((req, res, next) => {
     .catch(err => console.log(err));
 });
 //*/
-app.use(csurfProduct);
+app.use(csurfProduct); 
 
 app.use((req, res, next) => {
   if (!req.session.user) {
