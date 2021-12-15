@@ -176,3 +176,20 @@ main {
     display: none;
   }
 }
+
+
+.user-message {
+  margin: auto; /*  to made design in centre */
+  width: 30%;
+  border: 1px solid #4771fa;
+  padding: 0.5rem;
+  border-radius: 3px;
+  background: #b9c9ff;
+  text-align: center;
+}
+
+.user-message--error {
+  border-color: red;
+  background: rgb(255, 176, 176);
+  color: red;
+}

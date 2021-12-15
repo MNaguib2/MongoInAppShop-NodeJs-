@@ -21,6 +21,7 @@
                 </ul>
                 <%if(isAuthenticated) {%>
                 <form action="/clear-order" method="post">
+                    <input type="hidden" name="_csrf" value="<%= csrfToken %>"> <!--is very important in there the name is constant not change-->
                 <button type="submit" class="btn">Clear All Order</button>
                 </form>
                 <% } %>

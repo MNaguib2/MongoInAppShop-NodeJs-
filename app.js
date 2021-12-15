@@ -5,6 +5,7 @@ const MongoConnect = require('./util/database');
 const BodyParser = require('body-parser');
 const Data = require('./Data');
 const User = require('./models/User');
+const flash = require('connect-flash');
 
 const MongoDbURI = 
 `mongodb+srv://mena:${Data.password}@cluster0.ovkbw.mongodb.net/${Data.name}?retryWrites=true&w=majority`
@@ -53,6 +54,7 @@ app.use((req, res, next) => {
 });
 //*/
 app.use(csurfProduct); 
+app.use(flash());
 
 app.use((req, res, next) => {
   if (!req.session.user) {
@@ -65,6 +67,11 @@ app.use((req, res, next) => {
     })
     .catch(err => console.log(err));
 });
+app.use((req, res, next) => {
+  res.locals.isAuthenticated = req.session.isLoggedIn;
+  res.locals.csrfToken = req.csrfToken();
+  next();
+})
 app.use('/admin', adminData);
 app.use('/auth', auth);
 app.use(routershop);

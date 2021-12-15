@@ -5,6 +5,7 @@
 <body>
     <%- include('../layouts/navigation.ejs') %>
     <main>
+        <div class="user-message user-message--error"><%= passwordvalid %></div>
         <form class="login-form" action="/auth/login" method="POST">
             <div class="form-control">
                 <label for="email">E-Mail</label>
@@ -15,6 +16,7 @@
                 <input type="password" name="password" id="password">
                 <p style="color: red; margin-top: 0%; font-size: 14px; font-family: Garamond, serif; text-align: center;"><%= passwordvalid %></p>
             </div>
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>"> <!--is very important in there the name is constant not change-->
             <button class="btn" type="submit">Login</button>
         </form>
     </main>

@@ -29,6 +29,7 @@
                             <form action="/card" method="POST" style="display: inline;">
                                 <button class="btn">Add to Cart</button>
                                 <input type="hidden" name="productId" value="<%= product._id %>">
+                                <input type="hidden" name="_csrf" value="<%= csrfToken %>"> <!--is very important in there the name is constant not change-->
                         </form>
                         <% } %>
                         </div>

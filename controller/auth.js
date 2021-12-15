@@ -2,8 +2,42 @@ const User = require("../models/User");
 const bcrypt = require('bcryptjs');
 let validPassword ;
 
+//*
+const nodemail = require('nodemailer');
+const sendridtransport = require('nodemailer-sendgrid-transport');
+const transport = nodemail.createTransport(sendridtransport({
+  auth: {
+    api_key:  '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'  
+  }
+}))
+// const transport = nodemail.createTransport({
+//   service: "gmail",
+//   auth: {
+//     user: "menaafefe1@gmail.com",
+//     pass : "a12345678A#"
+//   },
+//   tls: {
+//     rejectUnauthorized : false
+//   }
+// })
+// let mailOptions = {
+//   from : "menaafefe1@gmail.com",
+//   to : "a3625038920z@gmail.com",  
+//   subject : "Testing",
+//   text : "first email send from Node Js from NodeMail"
+// }
+// transport.sendMail(mailOptions , (err , successful) => {
+//   if(err) {
+//     console.log(err);
+//   } else {
+//     console.log("sended email is successful !!");
+//   }
+// })
+//*/ there is two way to send email via node js on from sendgrib ofcourse use nodemail and another use nodemail only
+
 exports.getLogin = (req, res, next) => {
-  validPassword = req.query.validPassword;
+  //validPassword = req.query.validPassword;
+  validPassword = req.flash('error');
   res.render("auth/login", {
     path: req.url,
     pageTitle: "Login",
@@ -35,10 +69,12 @@ exports.postLogin = (req, res, next) => {
         res.redirect("/");       
       });
           }else {
+            req.flash('error', 'this is error in email or password');
             res.redirect('/auth/login' + '?validPassword=Please Add Password correct')
           } 
         })      
       } else {
+        req.flash('error', 'this is error in email or password');
         res.redirect('/auth/login' + '?validPassword=This Email is Not Register !! Try SingUp')
       }          
     })
@@ -89,6 +125,13 @@ exports.PostSiginUp = (req, res, next) => {
                   : "No error Found Successful Login in PostLogin in AuthController "
               );
               res.redirect("/");
+              console.log(email);
+              return transport.sendMail({
+                to: email,
+                from: 'menaafefe1@gmail.com',
+                subject: 'siginUp Sucessed !!',
+                html: '<h1>You Successfully signed Up !</h1>'
+              }).catch(err => console.log(err));              
             });
           })        
         } else {

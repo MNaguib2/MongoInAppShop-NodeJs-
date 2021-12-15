@@ -8,8 +8,8 @@ exports.getIndex = (req, res, next) => {
             prods: result,
             pageTitle: 'shop',
             path: req.url,
-            isAuthenticated: req.session.isLoggedIn,
-            csrfToken : req.csrfToken() // to made this way in all page when render all from backend this way is cumbersome and will demonistrating another way is convenient
+            //isAuthenticated: req.session.isLoggedIn,
+            //csrfToken : req.csrfToken() // to made this way in all page when render all from backend this way is cumbersome and will demonistrating another way is convenient
         })
     })
     //console.log(req.session.isLoggedIn)
@@ -113,7 +113,7 @@ exports.postcreateorder = (req, res, next) => {
       });
       const order = new Order({
         user: {
-          name: req.user.name,
+          email: req.user.email,
           userId: req.user
         },
         products: products
