@@ -5,6 +5,8 @@ const express = require('express');
 const router = express.Router();
 
 const ShopController = require('../controller/shop');
+
+const middleware = require('../middleware/is-auth'); //this is different way to product url link
 	
  router.get('/', ShopController.getIndex);
  router.get('/products', ShopController.getProducts);
@@ -15,6 +17,8 @@ const ShopController = require('../controller/shop');
  router.post('/create-order', ShopController.postcreateorder);
  router.get('/order', ShopController.getOrder);
  router.post('/clear-order', ShopController.clearOrder);
+
+ router.get('/order/:orderID',middleware, ShopController.getInvoice);
 
   
 router.get('**', (req, res, next)=>{

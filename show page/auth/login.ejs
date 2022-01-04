@@ -5,7 +5,9 @@
 <body>
     <%- include('../layouts/navigation.ejs') %>
     <main>
-        <div class="user-message user-message--error"><%= passwordvalid %></div>
+        <% if(errorMessage.length > 0)  {%> 
+            <div class="user-message user-message--error"><%= errorMessage %></div>
+            <% } %> 
         <form class="login-form" action="/auth/login" method="POST">
             <div class="form-control">
                 <label for="email">E-Mail</label>
@@ -19,6 +21,9 @@
             <input type="hidden" name="_csrf" value="<%= csrfToken %>"> <!--is very important in there the name is constant not change-->
             <button class="btn" type="submit">Login</button>
         </form>
+        <div class="centered">
+            <a href="/auth/reset">Reset Password</a>
+        </div>
     </main>
 </body>
 </html>

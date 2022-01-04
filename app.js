@@ -6,6 +6,9 @@ const BodyParser = require('body-parser');
 const Data = require('./Data');
 const User = require('./models/User');
 const flash = require('connect-flash');
+const errorController= require('./controller/error');
+const multer =require('multer');
+
 
 const MongoDbURI = 
 `mongodb+srv://mena:${Data.password}@cluster0.ovkbw.mongodb.net/${Data.name}?retryWrites=true&w=majority`
@@ -25,15 +28,43 @@ const adminData = require('./routes/admin');
 const routershop = require('./routes/shop');
 const auth = require('./routes/auth');
 
-app.use(BodyParser.urlencoded({ extended: false }));
+const fileStorage = multer.diskStorage({
+  destination: (req , file, cb) => {
+      cb(null, 'images')
+  }, 
+  filename: (req, file , cb) => {
+     //console.log(file);
+      cb(null, file.originalname);
+  }
+})
+
+const fileFilter = (req, file, cb) => {
+  if (
+    file.mimetype === 'image/png' ||
+    file.mimetype === 'image/jpg' ||
+    file.mimetype === 'image/jpeg'
+  ) {
+    cb(null, true);
+  } else {
+    cb(null, false);
+  }
+};
+
+app.use(BodyParser.urlencoded({ extended: false })); //this is to Handle JSON Request incomming
+app.use(multer({/*dest:'images' this comment to edite in file storage in extention or any thing*/
+ storage: fileStorage,
+ fileFilter: fileFilter}).single('image'))
 
 app.set('view engine', 'ejs');
 
 app.set('views', 'show page');
 
 const path = require('path');
+// console.log(rootDir);
+app.use(express.static(path.join(rootDir , 'public'))); // to direcct to folder css
+app.use('/images',express.static(path.join(rootDir, 'images'))); // to direcct to folder source file
 
-app.use(express.static(path.join(rootDir, 'public'))); // to direcct to folder css
+
 app.use(session(
   {secret: 'my sedcret', resave: false, saveUninitialized: false, 
   //*
@@ -105,3 +136,17 @@ app.use(routershop);
     .catch(err => console.log(err));
 
     //*/
+
+    app.get('/500', errorController.get500);
+    
+    app.use((error, req, res, next) => {
+      // res.status(error.httpStatusCode).render(...);
+      // res.redirect('/500');
+        //console.log(error);
+      res.status(500).render('500', {
+        pageTitle: 'Error!',
+        path: '/500',
+        isAuthenticated: req.session.isLoggedIn,
+        Error : error
+      });
+    });

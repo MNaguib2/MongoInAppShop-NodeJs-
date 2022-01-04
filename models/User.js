@@ -11,6 +11,8 @@ const UserSchema = new schema({
         type: String,
         required: true
     },
+    restToken : String,
+    restTokenExpiration : Date,
     cart:{
         items: [
             {

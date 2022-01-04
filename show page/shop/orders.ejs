@@ -8,11 +8,11 @@
                 <ul>
                     <% orders.forEach(order => { %>
                         <li>
-                            <h1># <%= order._id %></h1> 
+                            <h1 style="display: inline;"># <%= order._id %></h1>  - <a href="/order/<%= order._id %> ">Invoice</a>
                             <ul>
                                 <% order.products.forEach(item => { %>
                                     <li>
-                                        <%= item.product.title %> ( <%= item.quantity %> )
+                                        <%= item.product.title %> ( <%= item.quantity %> ) 
                                     </li>
                                     <% }); %>
                             </ul>
@@ -20,9 +20,9 @@
                         <% }); %>
                 </ul>
                 <%if(isAuthenticated) {%>
-                <form action="/clear-order" method="post">
-                    <input type="hidden" name="_csrf" value="<%= csrfToken %>"> <!--is very important in there the name is constant not change-->
+                <form action="/clear-order" method="post">                   
                 <button type="submit" class="btn">Clear All Order</button>
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>"> <!--is very important in there the name is constant not change-->
                 </form>
                 <% } %>
                 <% } else { %>                    

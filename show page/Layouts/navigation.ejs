@@ -23,8 +23,8 @@
             <% } else { %>
                 <li class="main-header__item">
                     <form action="/auth/logout" method="post">
-                        <input type="hidden" name="_csrf" value="<%= csrfToken %>"> <!--is very important in there the name is constant not change-->
                         <button type="submit" id="logout" class="btn">Logout</button>
+                        <input type="hidden" name="_csrf" value="<%= csrfToken %>"> <!--is very important in there the name is constant not change-->
                     </form>
                 </li>
             <% } %>

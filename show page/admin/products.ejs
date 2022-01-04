@@ -16,7 +16,9 @@
                                     </h1>
                                 </header>
                                 <div class="card__image">
-                                    <img src="<%= product.imageUrl %>" alt="<%= product.imageUrl %>">
+                                    <img 
+                                    src="/<%= product.imageUrl %>" 
+                                    alt="<%= product.imageUrl %>">
                                 </div>
                                 <div class="card__content">
                                     <h2 class="product__price">
@@ -30,9 +32,14 @@
                                 <div class="card__actions">
                                     <a class="btn" href="/admin/edite-product/<%= product._id %>?edite=true">Edite</a>
                                     <input type="hidden" name="_csrf" value="<%= csrfToken %>"> <!--is very important in there the name is constant not change-->
-                                    <form action="/admin/delete-product/<%= product._id %>" style="display: inline;" method="POST">
-                                        <button class="btn">Delete</button>
-                                    </form>
+                                    <!-- <form action="/admin/delete-product/<%= product._id %>" style="display: inline;" method="POST"> this is comment to use JavaScript to send data instead of send via form  -->
+                                        <input type="hidden" value="<%= product._id %>" name="productId">
+                                        <button class="btn" type="button" onclick="deleteProduct(this)">Delete</button>
+                                       <!-- <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                                          is very important in there the name is constant not change
+                                          this is comment to use one in all design not need to two after comment form POST to Method DELETE to use intead of another way like when use frontend ISOLATE
+                                        -->
+                                    <!-- </form> -->
                                 </div>
                             </article>
                             <% } %>
@@ -42,6 +49,7 @@
                         <% } %>
             </main>
             <script src="/JS/readMoreLess.js"></script>
+            <script src="/JS/admin.js"></script>
     </body>
 
     </html>

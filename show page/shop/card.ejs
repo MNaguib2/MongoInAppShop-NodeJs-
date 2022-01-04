@@ -15,6 +15,7 @@
                                 <!--in there must write <%= product._id %> but we add productId to use mongoose only-->
                                 <input type="hidden" value="<%= product.productId._id %>" name="productId">
                                 <button class="btn" type="submit">Delete</button>
+                                <input type="hidden" name="_csrf" value="<%= csrfToken %>"> <!--is very important in there the name is constant not change-->
                             </form>
                         </li>
                     <%}) %>
