@@ -179,6 +179,7 @@ exports.postAddProduct = (req, res, next) => {
   exports.deleteproduct = (req , res) => {
     Product.findById(req.params.productid)
     .then(result => {
+      //console.log(result.imageUrl);
       fileHelper.deletFile(result.imageUrl);
     }).catch(err => {
       console.log(err)

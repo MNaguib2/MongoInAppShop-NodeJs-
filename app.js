@@ -51,7 +51,7 @@ const fileFilter = (req, file, cb) => {
 };
 
 app.use(BodyParser.urlencoded({ extended: false })); //this is to Handle JSON Request incomming
-app.use(multer({/*dest:'images' this comment to edite in file storage in extention or any thing*/
+app.use(multer({  /*dest:'images' this comment to edite in file storage in extention or any thing*/
  storage: fileStorage,
  fileFilter: fileFilter}).single('image'))
 
@@ -72,6 +72,7 @@ app.use(session(
   //you can add any configuration to cookie here*/
   store: store
 }));
+
 /* i will comment this to use signin and define every user
 app.use((req, res, next) => {
   User.findById('6160d377aee8733895e1c8e5')//this to db mongoose
@@ -84,6 +85,7 @@ app.use((req, res, next) => {
     .catch(err => console.log(err));
 });
 //*/
+
 app.use(csurfProduct); 
 app.use(flash());
 
