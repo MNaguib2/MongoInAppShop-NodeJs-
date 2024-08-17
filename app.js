@@ -8,8 +8,8 @@ const User = require('./models/User');
 const flash = require('connect-flash');
 const errorController= require('./controller/error');
 const multer =require('multer');
-
-
+const dotenv = require('dotenv');
+dotenv.config();
 const MongoDbURI = 
 `mongodb+srv://mena:${Data.password}@cluster0.ovkbw.mongodb.net/${Data.name}?retryWrites=true&w=majority`
 const mongooes = require('mongoose');
@@ -133,7 +133,9 @@ app.use(routershop);
         }
       })
       .catch(err => console.log(err));
-      app.listen(3300);
+      app.listen(3300, () => {
+        console.log(`connection established in http://localhost:3300`);        
+      });
     })
     .catch(err => console.log(err));
 
