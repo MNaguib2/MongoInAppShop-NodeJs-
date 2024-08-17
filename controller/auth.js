@@ -16,8 +16,8 @@ const sendridtransport = require('nodemailer-sendgrid-transport');
 const transport = nodemail.createTransport({
   service: "gmail",
   auth: {
-    user: "menaafefe1@gmail.com",
-    pass: "a12345678A#"
+    user: "teste.learningnodejs@gmail.com",
+    pass: `${process.env.passGMAIL}` // hide password
   },
   tls: {
     rejectUnauthorized: false
